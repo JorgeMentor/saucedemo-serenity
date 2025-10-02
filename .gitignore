@@ -1,0 +1,51 @@
+# =========================
+# IDEs
+# =========================
+# IntelliJ IDEA
+.idea/
+*.iml
+*.ipr
+*.iws
+
+# Configs temporales de ejecución
+.run/
+
+# =========================
+# Gradle
+# =========================
+.gradle/
+build/
+
+# =========================
+# Serenity / Cucumber reports (cuando los genera en 'target/')
+# =========================
+target/
+target/site/serenity/
+target/cucumber/
+target/cucumber-html/
+
+# =========================
+# Java / compilados / empaquetados locales
+# =========================
+*.class
+# artefactos locales
+*.jar
+*.war
+*.ear
+
+# =========================
+# Logs y temporales
+# =========================
+*.log
+*.tmp
+*.swp
+*.swo
+
+# =========================
+# Archivos del SO
+# =========================
+.DS_Store
+._*
+Thumbs.db
+ehthumbs.db
+Desktop.ini
