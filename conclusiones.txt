@@ -1,0 +1,86 @@
+CONCLUSIONES DEL EJERCICIO (SauceDemo - Serenity BDD + Screenplay)
+
+1) RESUMEN
+- Se implementó un flujo E2E de compra en https://www.saucedemo.com usando Serenity BDD con el patrón Screenplay.
+- Se agregó un segundo conjunto de escenarios consumiendo datos desde JSON, cumpliendo con "Los datos deben pasar por parámetro por CSV o JSON".
+- Se dejaron dos tipos de reportes: Serenity y Cucumber-HTML.
+
+2) ENTORNO FINAL USADO
+- Gradle: 7.6.1
+- JDK (toolchain): 17 (aunque el sistema tenía JDK 21, Gradle ejecuta las pruebas con toolchain 17).
+- IntelliJ IDEA
+- Serenity BDD: 4.2.34
+- Cucumber: 7.14.0
+- WebDriver: Chrome
+
+3) HALLAZGOS Y CÓMO SE RESOLVIERON
+A. Error “Unsupported class file major version (65/68)”
+   - Síntoma: El build fallaba al instrumentar JARs de jackson-core 2.15.4 y byte-buddy 1.17.5.
+   - Causa: Esas versiones incluyen clases compiladas para JDK ≥21/24, incompatibles con Gradle 7.6.1 + ASM interno.
+   - Solución: Forzar versiones compatibles en build.gradle:
+       * net.bytebuddy:byte-buddy:1.14.10 (y byte-buddy-agent)
+       * com.fasterxml.jackson.core: jackson-core/databind/annotations:2.14.2
+     Se aplicó en `buildscript.configurations.classpath.resolutionStrategy` y en `configurations.all.resolutionStrategy`.
+
+B. Advertencia SLF4J “No SLF4J providers were found”
+   - Síntoma: Mensajes en consola sin afectar la ejecución.
+   - Solución: Añadir un backend de logging en test:
+       * Opción simple:  testRuntimeOnly 'org.slf4j:slf4j-simple:2.0.13'
+       * (Alternativa: logback-classic).
+
+C. Reporte de Serenity “plano/sin estilos”
+   - Síntoma: index.html sin CSS/JS.
+   - Causa: Faltaban los recursos estáticos.
+   - Solución: Añadir dependencia de recursos del reporte:
+       * testImplementation "net.serenity-bdd:serenity-report-resources:${serenityVersion}"
+     y limpiar/regenerar (`rd /s /q target` + `gradlew clean test aggregate`).
+
+D. Advertencia CDP version en rojo
+   - Mensaje: “Unable to find an exact match for CDP version 140; found 137”.
+   - Naturaleza: Es una advertencia (NO error). No detiene las pruebas.
+   - Opcional: Actualizar Selenium/WebDriver al par exacto de la versión de Chrome instalada.
+
+E. NullPointerException en escenarios con JSON
+   - Síntoma: Falla en el step “agrega dos productos al carrito” (el actor no estaba en el spotlight).
+   - Causa: En los escenarios con JSON no se estaba creando el actor antes de usar acciones Screenplay.
+   - Solución: En ShopStepDefinitions:
+       * `@Before setTheStage(new OnlineCast())`
+       * Nuevo step `autenticaConDatosCargados()` que reutiliza `autenticaEnSauceDemo(data.getUser(), data.getPassword())`.
+       * Se añadieron getters en `OrderData` (user, password, firstName, lastName, zip).
+
+4) PARAMETRIZACIÓN POR JSON
+- Archivo de datos: `src/test/resources/data/orders.json`.
+- Nuevo bloque Gherkin con tag @json y Examples con índice (`idx`) para leer filas del JSON.
+- Steps relevantes:
+    Dado cargo datos de compra de "<archivo>" en la fila <idx>
+    Y que el usuario se autentica en SauceDemo
+    Cuando agrega dos productos al carrito
+    Y visualiza el carrito y completa el formulario de compra
+    Entonces debería ver el mensaje "Thank you for your order!"
+
+5) REPORTES GENERADOS
+- Serenity:   target/site/serenity/index.html
+  * Vista por Requerimientos/Features/Resultados generales.
+- Cucumber HTML: target/site/cucumber-html/index.html
+  * Métricas por Features/Tags/Steps (en esta ejecución: 4 escenarios, 18 steps).
+- Cucumber JSON (fuente): target/cucumber/cucumber.json
+
+6) RESULTADOS DE LA EJECUCIÓN
+- 4 escenarios PASSED (2 con datos “inline” + 2 desde JSON).
+- 18 steps PASSED en total (los escenarios con JSON tienen 1 step adicional para la carga del JSON).
+- El “rojo” en consola corresponde a advertencias (CDP), no a fallos.
+
+7) CÓMO REPRODUCIR
+- En la raíz del proyecto:
+    rd /s /q target
+    gradlew clean test aggregate
+- Abrir el reporte:
+    target/site/serenity/index.html
+    target/site/cucumber-html/index.html
+
+8) RECOMENDACIONES
+- Mantener Gradle 7.6.1 con Java toolchain 17 para estabilidad con Serenity 4.2.x.
+- Si se actualiza Chrome, ajustar Selenium/ChromeDriver para evitar la advertencia CDP.
+- Para más datos, añadir nuevas filas al `orders.json` y extender Examples (idx) en el feature.
+
+

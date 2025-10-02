@@ -1,0 +1,100 @@
+{
+  "formatVersion": "1.1",
+  "component": {
+    "group": "io.opentelemetry",
+    "module": "opentelemetry-context",
+    "version": "1.50.0",
+    "attributes": {
+      "org.gradle.status": "release"
+    }
+  },
+  "createdBy": {
+    "gradle": {
+      "version": "8.14"
+    }
+  },
+  "variants": [
+    {
+      "name": "apiElements",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.jvm.version": 8,
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-api"
+      },
+      "files": [
+        {
+          "name": "opentelemetry-context-1.50.0.jar",
+          "url": "opentelemetry-context-1.50.0.jar",
+          "size": 49255,
+          "sha512": "5d31ece96b2641c7c1cf8976a7e65a5cd1e6c07b62f32600e51c18f13d76e72d56ff9fd87c120a779a1d1ec4f680c64e41e080c1f5a843394931625643fba574",
+          "sha256": "76f9dfe1a6f74d5081e07bde1f7cb9a06879d317ec0ae0f61dd8fb2be9afad4f",
+          "sha1": "dcdc20a193e82d66ecf5a1a978a799bc19e9b210",
+          "md5": "ebdd6e8d46c06fd3491416a50aa19871"
+        }
+      ]
+    },
+    {
+      "name": "runtimeElements",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.jvm.version": 8,
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-runtime"
+      },
+      "files": [
+        {
+          "name": "opentelemetry-context-1.50.0.jar",
+          "url": "opentelemetry-context-1.50.0.jar",
+          "size": 49255,
+          "sha512": "5d31ece96b2641c7c1cf8976a7e65a5cd1e6c07b62f32600e51c18f13d76e72d56ff9fd87c120a779a1d1ec4f680c64e41e080c1f5a843394931625643fba574",
+          "sha256": "76f9dfe1a6f74d5081e07bde1f7cb9a06879d317ec0ae0f61dd8fb2be9afad4f",
+          "sha1": "dcdc20a193e82d66ecf5a1a978a799bc19e9b210",
+          "md5": "ebdd6e8d46c06fd3491416a50aa19871"
+        }
+      ]
+    },
+    {
+      "name": "javadocElements",
+      "attributes": {
+        "org.gradle.category": "documentation",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.docstype": "javadoc",
+        "org.gradle.usage": "java-runtime"
+      },
+      "files": [
+        {
+          "name": "opentelemetry-context-1.50.0-javadoc.jar",
+          "url": "opentelemetry-context-1.50.0-javadoc.jar",
+          "size": 120077,
+          "sha512": "c24b0125bdc0e16bd62e57d36f6bff96cf2f4fa988fc50b8fd8f0348ffe957bedd960a74f8afd4b9340803069a8d2832695ab0d5f0efbf687bb8c9268baa789d",
+          "sha256": "d61343ca7e7f3771171422a4e16dd8c7c68b55e9c208c80136c80e17505915a9",
+          "sha1": "76b0f550391b0b7a409bac34fa0ac63940fdd364",
+          "md5": "838384de4db8e4441e444b6fe3c08ce0"
+        }
+      ]
+    },
+    {
+      "name": "sourcesElements",
+      "attributes": {
+        "org.gradle.category": "documentation",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.docstype": "sources",
+        "org.gradle.usage": "java-runtime"
+      },
+      "files": [
+        {
+          "name": "opentelemetry-context-1.50.0-sources.jar",
+          "url": "opentelemetry-context-1.50.0-sources.jar",
+          "size": 39149,
+          "sha512": "6c2c67858df345e499ea5826f8e4995ece01223501adec190e7ce22c453a45d28f3af83020334ba7913e385471ce8a77b1d80736158735891e1d732de3aff2c7",
+          "sha256": "6d23f01360c068fa709355d44d6cfd853cd53f96a62bc6820a72515562e9b76f",
+          "sha1": "34222bd789062693a7b91612b698586d08901d4d",
+          "md5": "d39817d5480d5463d9c25575c868ea72"
+        }
+      ]
+    }
+  ]
+}

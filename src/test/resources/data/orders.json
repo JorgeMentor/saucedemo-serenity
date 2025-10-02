@@ -1,0 +1,4 @@
+[
+  { "user": "standard_user", "password": "secret_sauce", "firstName": "Jorge",  "lastName": "Escobar", "zip": "170801" },
+  { "user": "standard_user", "password": "secret_sauce", "firstName": "Carlos", "lastName": "Armijos", "zip": "123456" }
+]

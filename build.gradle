@@ -1,0 +1,107 @@
+// Gradle 7.6.1 + Java 17 + Serenity
+// Evita errores de "Unsupported class file major version" fijando versiones
+
+import net.masterthought.cucumber.Configuration
+import net.masterthought.cucumber.ReportBuilder
+
+buildscript {
+    repositories {
+        mavenCentral()
+        gradlePluginPortal()
+    }
+    dependencies {
+        classpath "net.serenity-bdd:serenity-gradle-plugin:4.2.34"
+        // Librería para generar el HTML de Cucumber
+        classpath "net.masterthought:cucumber-reporting:5.7.6"
+    }
+    // Forzar en el classpath de build (plugins)
+    configurations.classpath {
+        resolutionStrategy {
+            // Byte Buddy compatible
+            force "net.bytebuddy:byte-buddy:1.14.10",
+                    "net.bytebuddy:byte-buddy-agent:1.14.10"
+            // Jackson compatible (sin clases de JDK 21+)
+            force "com.fasterxml.jackson.core:jackson-core:2.14.2",
+                    "com.fasterxml.jackson.core:jackson-databind:2.14.2",
+                    "com.fasterxml.jackson.core:jackson-annotations:2.14.2"
+        }
+    }
+}
+
+apply plugin: "java"
+apply plugin: "net.serenity-bdd.serenity-gradle-plugin"
+
+repositories { mavenCentral() }
+
+ext {
+    serenityVersion = '4.2.34'
+    cucumberVersion = '7.14.0'
+}
+
+dependencies {
+    // Serenity
+    testImplementation "net.serenity-bdd:serenity-core:${serenityVersion}"
+    testImplementation "net.serenity-bdd:serenity-junit:${serenityVersion}"
+    testImplementation "net.serenity-bdd:serenity-screenplay:${serenityVersion}"
+    testImplementation "net.serenity-bdd:serenity-screenplay-webdriver:${serenityVersion}"
+    testImplementation "net.serenity-bdd:serenity-cucumber:${serenityVersion}"
+    testImplementation "net.serenity-bdd:serenity-ensure:${serenityVersion}"
+
+    // Cucumber 7 + JUnit4
+    testImplementation "io.cucumber:cucumber-java:${cucumberVersion}"
+    testImplementation "io.cucumber:cucumber-junit:${cucumberVersion}"
+
+    // Backend de logging para SLF4J (elimina "No SLF4J providers were found")
+    testRuntimeOnly 'org.slf4j:slf4j-simple:2.0.13'
+
+    // Recursos del reporte Serenity (CSS/JS)
+    testImplementation "net.serenity-bdd:serenity-report-resources:${serenityVersion}"
+}
+
+java { toolchain { languageVersion = JavaLanguageVersion.of(17) } }
+
+tasks.withType(JavaCompile).configureEach { options.encoding = 'UTF-8' }
+
+// ------- Reporte HTML de Cucumber (masterthought) -------
+tasks.register("cucumberReport") {
+    doLast {
+        def jsonDir = file("$buildDir/cucumber")
+        def jsonFiles = fileTree(jsonDir).matching { include "**/*.json" }.files.collect { it.absolutePath }
+
+        if (jsonFiles.isEmpty()) {
+            logger.lifecycle("No se encontraron JSON de Cucumber en $jsonDir. " +
+                    "¿Tienes el plugin 'json:target/cucumber/cucumber.json' en tu runner?")
+            return
+        }
+
+        File outputDir = file("$buildDir/site/cucumber-html")
+        outputDir.mkdirs()
+
+        def config = new Configuration(outputDir, project.name)
+        config.setBuildNumber(new Date().format("yyyyMMdd-HHmm"))
+
+        def reportBuilder = new ReportBuilder(jsonFiles, config)
+        reportBuilder.generateReports()
+        logger.lifecycle("Reporte Cucumber HTML generado en: $outputDir/index.html")
+    }
+}
+
+tasks.test {
+    useJUnit()
+    systemProperty "cucumber.filter.tags", System.getProperty("cucumber.filter.tags")
+    systemProperty "file.encoding", "UTF-8"
+    testLogging { events "passed", "skipped", "failed" }
+    // Al terminar los tests: genera Serenity y Cucumber HTML
+    finalizedBy "aggregate", "cucumberReport"
+}
+
+// Forzar versiones también para las dependencias del proyecto
+configurations.all {
+    resolutionStrategy {
+        force "net.bytebuddy:byte-buddy:1.14.10",
+                "net.bytebuddy:byte-buddy-agent:1.14.10",
+                "com.fasterxml.jackson.core:jackson-core:2.14.2",
+                "com.fasterxml.jackson.core:jackson-databind:2.14.2",
+                "com.fasterxml.jackson.core:jackson-annotations:2.14.2"
+    }
+}

@@ -1,0 +1,15 @@
+// settings.gradle (en la raíz del proyecto)
+pluginManagement {
+    repositories {
+        gradlePluginPortal()
+        mavenCentral()
+    }
+}
+
+dependencyResolutionManagement {
+    repositories {
+        mavenCentral()
+    }
+}
+
+rootProject.name = "saucedemo-serenity"

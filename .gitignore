@@ -15,6 +15,7 @@
 # =========================
 .gradle/
 build/
+.gradle-cache-local/
 
 # =========================
 # Serenity / Cucumber reports (cuando los genera en 'target/')
