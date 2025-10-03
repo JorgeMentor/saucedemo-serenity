@@ -14,17 +14,22 @@
 # Gradle
 # =========================
 .gradle/
+**/.gradle/
 build/
 .gradle-cache-local/
 
 # =========================
 # Serenity / Cucumber reports (cuando los genera en 'target/')
 # =========================
-target/
-target/site/serenity/
-target/cucumber/
-target/cucumber-html/
+# --- permitir SOLO los reportes que queremos dentro de target ---
+!target/site/
+target/site/*
 
+!target/site/serenity/
+!target/site/serenity/**
+
+!target/site/cucumber-html/
+!target/site/cucumber-html/**
 # =========================
 # Java / compilados / empaquetados locales
 # =========================

@@ -1,0 +1,1 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><testsuite errors="0" failures="0" name="Flujo de compra en SauceDemo" skipped="0" tests="4" time="22.77" timestamp="2025-10-02 04:58:58"><testcase name="Compra exitosa de dos productos"/><testcase name="Compra exitosa con datos desde JSON"/></testsuite>
